@@ -1,0 +1,190 @@
++----------------------------------------------------------------------------+
+ |                          Fixed Area Fields Summary                         |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | # LOG RECORDS            History Repeat Area      I 3                      |
+ | NAME                     16-Byte Character                                 |
+ | WONum                    8-Byte Character                                  |
+ | MACHINE                  16-bit Unsigned Integer  I 3                      |
+ | EVENT TYPE               16-bit Signed Integer    WOStatusCode             |
+ | ACTIVATE?                8-bit Signed Integer     NO/YES                   |
+ | LAST_LOG_TIME            Timestamp                TS18                     |
+ | SEQUENCE_NUMBER          30-bit Unsigned Integer  I11                      |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS       '  Repeat Area Summary               |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | LOG_TIME                 Timestamp                TS18                     |
+ | LOG WORK ORDER           8-Byte Character                                  |
+ | LOG MACH NUMBER          16-bit Unsigned Integer  I 3                      |
+ | LOG VALUE                16-bit Signed Integer    WOStatusCode             |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |                          Update Generation Chains                          |
+ |----------------------------------------------------------------------------|
+ |                          ACTIVATE?                                         |
+ |                          LAST_LOG_TIME                                     |
+ |                          SEQUENCE_NUMBER                                   |
+ +----------------------------------------------------------------------------+
+
+
+ +----------------------------------------------------------------------------+
+ |                         Definition Record Details                          |
+ +----------------------------------------------------------------------------+
+ Definition Record Name: WOEventDef      
+ Record ID:              5012
+ Number of Fields:       12
+ Fixed Area Size:        28
+ Definition Type:        Normal
+ Activation Code:        0
+
+
+ +----------------------------------------------------------------------------+
+ |                          Fixed Area Field Details                          |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             # LOG RECORDS       
+ Field Number:           7835 (hex)
+ Data Type:              History Repeat Area
+ Occurence Size:         10 Words
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Sequence Field: SEQUENCE_NUMBER     
+ Summary Line Record:    WOHISTLINE          
+
+ Field Name:             NAME        
+ Field Number:           1002 (hex)
+ Data Type:              16-Byte Character String
+ User-Program Data Type: character[16]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             WONum       
+ Field Number:           0001 (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             MACHINE             
+ Field Number:           0059 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             EVENT TYPE          
+ Field Number:           0315 (hex)
+ Data Type:              16-bit Signed Integer
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         WOStatusCode    
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             ACTIVATE?           
+ Field Number:           2031 (hex)
+ Data Type:              8-bit Signed Integer
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         NO/YES          
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ Field to Update:        LAST_LOG_TIME       
+
+ Field Name:             LAST_LOG_TIME       
+ Field Number:           783A (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ Field to Update:        SEQUENCE_NUMBER     
+
+ Field Name:             SEQUENCE_NUMBER     
+ Field Number:           520E (hex)
+ Data Type:              30-bit Unsigned Integer (History Sequence #)
+ User-Program Data Type: DTYPLONG
+ Display Format:         I11   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS           '  Repeat Area Details               |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             LOG_TIME    
+ Field Number:           7836 (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Never Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   LAST_LOG_TIME       
+
+ Field Name:             LOG WORK ORDER      
+ Field Number:           004A (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   WONum       
+
+ Field Name:             LOG MACH NUMBER     
+ Field Number:           0158 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   MACHINE             
+
+ Field Name:             LOG VALUE           
+ Field Number:           03E9 (hex)
+ Data Type:              16-bit Signed Integer
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         WOStatusCode    
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   EVENT TYPE          

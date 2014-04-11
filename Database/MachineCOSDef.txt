@@ -1,0 +1,177 @@
+ +----------------------------------------------------------------------------+
+ |                          Fixed Area Fields Summary                         |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | # LOG RECORDS            History Repeat Area      I 3                      |
+ | NAME                     16-Byte Character                                 |
+ | WONum                    8-Byte Character                                  |
+ | STATE                    8-bit Unsigned Integer   MACHINE_MODES            |
+ | LAST_LOG_TIME            Timestamp                TS18                     |
+ | LOG_SEQUENCE_NUMBER      31-bit Unsigned Integer  I11                      |
+ | LOGS_ON_DISK             16-bit Unsigned Integer  I 3                      |
+ | DISK_HISTORY_TASK        Record                                            |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS       '  Repeat Area Summary               |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | LOG WORK ORDER           8-Byte Character                                  |
+ | LOG STATE                8-bit Unsigned Integer   MACHINE_MODES            |
+ | TIME_STAMP_VALUE         Timestamp                TS18                     |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |                          Update Generation Chains                          |
+ |----------------------------------------------------------------------------|
+ |                          LAST_LOG_TIME                                     |
+ |                          LOG_SEQUENCE_NUMBER                               |
+ +----------------------------------------------------------------------------+
+
+
+ +----------------------------------------------------------------------------+
+ |                         Definition Record Details                          |
+ +----------------------------------------------------------------------------+
+ Definition Record Name: MachineCOSDef   
+ Record ID:              2544
+ Number of Fields:       11
+ Fixed Area Size:        41
+ Definition Type:        Normal
+ Activation Code:        0
+
+
+ +----------------------------------------------------------------------------+
+ |                          Fixed Area Field Details                          |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             # LOG RECORDS       
+ Field Number:           7835 (hex)
+ Data Type:              History Repeat Area
+ Occurence Size:         9 Words
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Sequence Field: LOG_SEQUENCE_NUMBER 
+ Archiving ON/OFF:       LOGS_ON_DISK        
+ Summary Line Record:    MachineCOSHistLine  
+
+ Field Name:             NAME        
+ Field Number:           1002 (hex)
+ Data Type:              16-Byte Character String
+ User-Program Data Type: character[16]
+ Field Write Level:    General
+ Field Changeability:    Unusable
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             WONum       
+ Field Number:           0001 (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             STATE       
+ Field Number:           00BD (hex)
+ Data Type:              8-bit Unsigned Integer
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         MACHINE_MODES   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             LAST_LOG_TIME       
+ Field Number:           783A (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ Field to Update:        LOG_SEQUENCE_NUMBER 
+
+ Field Name:             LOG_SEQUENCE_NUMBER 
+ Field Number:           7838 (hex)
+ Data Type:              31-bit Unsigned Integer (History Sequence #)
+ User-Program Data Type: DTYPLONG
+ Display Format:         I11   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             LOGS_ON_DISK        
+ Field Number:           7837 (hex)
+ Data Type:              16-bit Unsigned Integer (Disk Count)
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Usable
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Task Field:     DISK_HISTORY_TASK   
+
+ Field Name:             DISK_HISTORY_TASK   
+ Field Number:           00BA (hex)
+ Data Type:              Record (Indirect Disk History Task)
+ User-Program Data Type: DTYPREID
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ Search Key Record:      DiskHistoryDef  
+
+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS           '  Repeat Area Details               |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             LOG WORK ORDER      
+ Field Number:           004A (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   WONum       
+
+ Field Name:             LOG STATE           
+ Field Number:           02FC (hex)
+ Data Type:              8-bit Unsigned Integer
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         MACHINE_MODES   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   STATE       
+
+ Field Name:             TIME_STAMP_VALUE    
+ Field Number:           141A (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Never Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   LAST_LOG_TIME       

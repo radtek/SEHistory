@@ -1,0 +1,187 @@
++----------------------------------------------------------------------------+
+ |                          Fixed Area Fields Summary                         |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | # LOG RECORDS            History Repeat Area      I 3                      |
+ | NAME                     16-Byte Character                                 |
+ | WONum                    8-Byte Character                                  |
+ | PartName                 20-Byte Character                                 |
+ | WO_CYCLES                31-bit Unsigned Integer  I11                      |
+ | STD CYCLE TM             Single Precision Real    F 6. 2                   |
+ | LAST_UPDATE              Timestamp                TS18                     |
+ | SEQUENCE_NUMBER          31-bit Unsigned Integer  I11                      |
+ | NUMBER OF DISK VALS      16-bit Unsigned Integer  I 5                      |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS       '  Repeat Area Summary               |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | LOG WORK ORDER           8-Byte Character                                  |
+ | LOG CYCLE COUNT          31-bit Unsigned Integer  I11                      |
+ | LOG STD CYCLE            Single Precision Real    F 6. 2                   |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |                          Update Generation Chains                          |
+ |----------------------------------------------------------------------------|
+ |                          LAST_UPDATE                                       |
+ |                          SEQUENCE_NUMBER                                   |
+ +----------------------------------------------------------------------------+
+
+
+ +----------------------------------------------------------------------------+
+ |                         Definition Record Details                          |
+ +----------------------------------------------------------------------------+
+ Definition Record Name: StdCycleTimeDef 
+ Record ID:              6945
+ Number of Fields:       12
+ Fixed Area Size:        53
+ Definition Type:        Normal
+ Disk History Record:    TSK_2DHI       
+ Activation Code:        0
+
+
+ +----------------------------------------------------------------------------+
+ |                          Fixed Area Field Details                          |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             # LOG RECORDS       
+ Field Number:           7835 (hex)
+ Data Type:              History Repeat Area
+ Occurence Size:         12 Words
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Sequence Field: SEQUENCE_NUMBER     
+ Archiving ON/OFF:       NUMBER OF DISK VALS 
+
+ Field Name:             NAME        
+ Field Number:           1002 (hex)
+ Data Type:              16-Byte Character String
+ User-Program Data Type: character[16]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             WONum       
+ Field Number:           0001 (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             PartName    
+ Field Number:           0359 (hex)
+ Data Type:              20-Byte Character String
+ User-Program Data Type: character[20]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             WO_CYCLES   
+ Field Number:           0284 (hex)
+ Data Type:              31-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I11   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             STD CYCLE TM        
+ Field Number:           00DA (hex)
+ Data Type:              Single Precision Real
+ User-Program Data Type: DTYPREAL or DTYPDUBL
+ Display Format:         F 6. 2
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             LAST_UPDATE 
+ Field Number:           3028 (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ Field to Update:        SEQUENCE_NUMBER     
+
+ Field Name:             SEQUENCE_NUMBER     
+ Field Number:           520E (hex)
+ Data Type:              31-bit Unsigned Integer (History Sequence #)
+ User-Program Data Type: DTYPLONG
+ Display Format:         I11   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             NUMBER OF DISK VALS 
+ Field Number:           2416 (hex)
+ Data Type:              16-bit Unsigned Integer (Disk Count)
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 5   
+ Field Write Level:    General
+ Field Changeability:    Usable
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS           '  Repeat Area Details               |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             LOG WORK ORDER      
+ Field Number:           004A (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   WONum       
+
+ Field Name:             LOG CYCLE COUNT     
+ Field Number:           00BB (hex)
+ Data Type:              31-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I11   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   WO_CYCLES   
+
+ Field Name:             LOG STD CYCLE       
+ Field Number:           02E9 (hex)
+ Data Type:              Single Precision Real
+ User-Program Data Type: DTYPREAL or DTYPDUBL
+ Display Format:         F 6. 2
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   STD CYCLE TM        

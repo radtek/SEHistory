@@ -1,0 +1,430 @@
+Attribute VB_Name = "frmSodickData"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+'Aspen tech Data Base definitions
+
+Const PORTNUM = 10014
+Const DRIVERNAME = "{AspenTech SQLPlus}"
+Const HOSTNAME = "PCIM03"
+Const RECORDDEFNAME = "IP_AnalogDef"
+Const RECORDNAME9 = "M1FillTime"
+Const RECORDNAME10 = "M1MeteringTime"
+Const RECORDNAME11 = "M1CycleTime"
+Const RECORDNAME12 = "M1MinCushion"
+Const RECORDNAME13 = "M1LastCushion"
+Const RECORDNAME14 = "M1MeteringPos"
+Const RECORDNAME22 = "M1V-PPosition"
+Const RECORDNAME23 = "M1V1-2Pressure"
+Const RECORDNAME24 = "M1V2-3Pressure"
+Const RECORDNAME25 = "M1V3-4Pressure"
+Const RECORDNAME26 = "M1V-PPressure"
+Const RECORDNAME27 = "M1T1Pressure"
+Const RECORDNAME28 = "M1T2Pressure"
+Const RECORDNAME29 = "M1T3Pressure"
+Const RECORDNAME31 = "M1PeakPressure"
+Const RECORDNAME32 = "M1V1-2Speed"
+Const RECORDNAME33 = "M1V2-3Speed"
+Const RECORDNAME34 = "M1V3-4Speed"
+Const RECORDNAME35 = "M1V-PSpeed"
+Const RECORDNAME36 = "M1T1Speed"
+Const RECORDNAME37 = "M1T2Speed"
+Const RECORDNAME38 = "M1T3Speed"
+Const RECORDNAME39 = "M1Z1Temp"
+Const RECORDNAME40 = "M1Z2Temp"
+Const RECORDNAME41 = "M1Z3Temp"
+Const RECORDNAME42 = "M1Z4Temp"
+Const RECORDNAME43 = "M1Z5Temp"
+Const RECORDNAME44 = "M1Z6Temp"
+Const RECORDNAME45 = "M1Z0Temp"
+Const RECORDNAME46 = "M1ZjTemp"
+Const RECORDNAME47 = "M1D1Temp"
+Const RECORDNAME48 = "M1ZhTemp"
+Const RECORDNAME49 = "M1D2Temp"
+Const RECORDNAME61 = "M1ClampOpenPos"
+
+Dim Tm As String
+Dim IP21con As New ADODB.Connection
+Dim IP21cmd As New ADODB.Command
+Dim strSQL As String
+Dim j As Integer
+
+Dim SodickData(1 To 85) As Single
+Dim Parsed_String_Data(1 To 85) As String
+Dim sText As String
+Dim sTemp As String
+
+Function Open_Comm_Port(port_number As Integer, baud_rate As String, parity As String, data_bits As String, stop_bits As String) As Boolean
+
+   On Error GoTo Err
+  
+    ' Open the port.
+     If SaxComm1.PortOpen = True Then
+         SaxComm1.PortOpen = False
+     End If
+     ' Set up Com Port
+    SaxComm1.CommPort = port_number
+    
+    ' for example 9600 baud, no parity, 8 data, and 1 stop bit.
+    '  "9600,N,8,1"
+    SaxComm1.Settings = baud_rate & "," & parity & "," & data_bits & "," & stop_bits
+    
+    ' Tell the control to read one character when Input is used.
+    SaxComm1.InputLen = 0
+   
+' Open the port.
+     If SaxComm1.PortOpen = False Then
+         SaxComm1.PortOpen = True
+     End If
+
+Open_Comm_Port = True
+SaxComm1.RThreshold = 1
+
+Exit Function
+
+Err:
+MsgBox "Com 3 not available", 48, "Communication error"
+Open_Comm_Port = False
+
+End Function
+Private Sub cmdClear_Click()
+Dim Index As Integer
+For Index = 0 To 84
+   txtData(Index).Text = ""
+Next
+
+Text1.Text = ""
+sText = ""
+sTemp = ""
+
+End Sub
+Private Sub Form_Load()
+Dim success As Boolean
+
+frmSodickData.WindowState = vbMinimized
+frmSodickData.Left = 100
+frmSodickData.Top = 100
+
+success = Open_Comm_Port(3, "9600", "N", "8", "1")
+If success = True Then
+lblSodick.Caption = "Connected to Sodick - DigiOne at 9600,N,8,1 ComPort 3"
+Else
+lblSodick.Caption = "Failed to connect to Sodick - DigiOne"
+End If
+
+End Sub
+
+Private Sub SaxComm1_Receive()
+Dim intt As Integer
+
+If SaxComm1.CommEvent = comEvReceive Then
+   If SaxComm1.InBufferCount > 0 Then
+        Text1.Text = SaxComm1.InBufferCount
+         sText = SaxComm1.Input
+         sTemp = sTemp & sText
+        intt = InStr(sTemp, Chr(3)) ' search for the end of line char ETX
+         
+        Text1.Text = Len(sTemp)
+       
+       If intt > 0 Then
+         If intt >= 600 Then
+            Call Parse_Data(sTemp)
+         Else
+            sTemp = ""
+            sText = ""
+         End If
+       End If
+       
+   End If
+   
+End If
+
+End Sub
+Function Parse_Data(StringData As String)
+'first 4 pieces of data are <STX>U1<SPACE>, ignore these start at 5th
+'Last 3 pieces of data are <SPACE><CR><ETX>
+
+Dim ch As String
+Dim CharCount As Integer
+Dim StringIndex As Integer
+Dim SpacePosition(1 To 86) As Integer
+Dim Start As Integer
+Dim length As Integer
+Dim St As String
+
+On Error Resume Next
+
+Start = 1 ' starting position
+
+For StringIndex = 1 To 86 ' there are 85 pieces of data and 86 spaces separating the data
+
+  SpacePosition(StringIndex) = InStr(Start, StringData, " ")
+
+  If SpacePosition(StringIndex) = 0 Then
+   Exit For
+  Else
+   Start = SpacePosition(StringIndex) + 1
+  End If
+Next
+
+
+For StringIndex = 1 To 85
+
+ If SpacePosition(StringIndex + 1) > 0 Then
+
+  length = (SpacePosition(StringIndex + 1) - SpacePosition(StringIndex))
+  length = length - 1
+
+  Parsed_String_Data(StringIndex) = Mid(StringData, (SpacePosition(StringIndex) + 1), length)
+ Else
+  Exit For
+ End If
+Next
+
+
+For StringIndex = 1 To 85
+SodickData(StringIndex) = CDbl(Parsed_String_Data(StringIndex))
+
+'Convert pressures from kg/cm2 to MPa
+If ((StringIndex >= 23) And (StringIndex <= 29)) Then
+    SodickData(StringIndex) = SodickData(StringIndex) * 0.0981
+End If
+If StringIndex = 31 Then
+    SodickData(StringIndex) = SodickData(StringIndex) * 0.0981
+End If
+
+' Convert from DEG C to DEG F
+If ((StringIndex >= 39) And (StringIndex <= 49)) Then
+    SodickData(StringIndex) = (SodickData(StringIndex) * 1.8) + 32
+End If
+
+txtData(StringIndex - 1) = SodickData(StringIndex)
+Next
+
+
+sText = ""
+sTemp = ""
+
+' PanCim write section
+
+' connect to the IP21 database
+IP21con.Open "Driver=" & DRIVERNAME & ";HOST=" & HOSTNAME & ";PORT=" & PORTNUM
+IP21cmd.ActiveConnection = IP21con
+IP21cmd.CommandType = adCmdText
+IP21cmd.CommandText = strSQL
+
+'Format the current time
+Tm = Format(Now(), "mmm-dd-yy HH:mm:ss")
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(9) & " where name= " & "'" & RECORDNAME9 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(10) & " where name= " & "'" & RECORDNAME10 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(11) & " where name= " & "'" & RECORDNAME11 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(12) & " where name= " & "'" & RECORDNAME12 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(13) & " where name= " & "'" & RECORDNAME13 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(14) & " where name= " & "'" & RECORDNAME14 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(22) & " where name= " & "'" & RECORDNAME22 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(23) & " where name= " & "'" & RECORDNAME23 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(24) & " where name= " & "'" & RECORDNAME24 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(25) & " where name= " & "'" & RECORDNAME25 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(26) & " where name= " & "'" & RECORDNAME26 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(27) & " where name= " & "'" & RECORDNAME27 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(28) & " where name= " & "'" & RECORDNAME28 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(29) & " where name= " & "'" & RECORDNAME29 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(31) & " where name= " & "'" & RECORDNAME31 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(32) & " where name= " & "'" & RECORDNAME32 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(33) & " where name= " & "'" & RECORDNAME33 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(34) & " where name= " & "'" & RECORDNAME34 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(35) & " where name= " & "'" & RECORDNAME35 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(36) & " where name= " & "'" & RECORDNAME36 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(37) & " where name= " & "'" & RECORDNAME37 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(38) & " where name= " & "'" & RECORDNAME38 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(39) & " where name= " & "'" & RECORDNAME39 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(40) & " where name= " & "'" & RECORDNAME40 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(41) & " where name= " & "'" & RECORDNAME41 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(42) & " where name= " & "'" & RECORDNAME42 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(43) & " where name= " & "'" & RECORDNAME43 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(44) & " where name= " & "'" & RECORDNAME44 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(45) & " where name= " & "'" & RECORDNAME45 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(46) & " where name= " & "'" & RECORDNAME46 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(47) & " where name= " & "'" & RECORDNAME47 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(48) & " where name= " & "'" & RECORDNAME48 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(49) & " where name= " & "'" & RECORDNAME49 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'Build the SQL update string
+strSQL = "update " & RECORDDEFNAME & " set IP_INPUT_VALUE= " & SodickData(61) & " where name= " & "'" & RECORDNAME61 & "'"
+'update the fields in fixed area first
+IP21cmd.CommandText = strSQL
+IP21cmd.Execute
+
+'close the connection
+If IP21con.State = adStateOpen Then
+  IP21con.Close
+End If
+
+End Function

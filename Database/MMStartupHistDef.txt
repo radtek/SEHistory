@@ -1,0 +1,405 @@
++----------------------------------------------------------------------------+
+ |                          Fixed Area Fields Summary                         |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | # LOG RECORDS            History Repeat Area      I 3                      |
+ | NAME                     18-Byte Character                                 |
+ | MACHINE                  16-bit Unsigned Integer  I 3                      |
+ | WONum                    8-Byte Character                                  |
+ | STOP TIME                Timestamp                TS18                     |
+ | START TIME               Timestamp                TS18                     |
+ | LOG_SEQUENCE_NUMBER      31-bit Unsigned Integer  I11                      |
+ | LOGS_ON_DISK             16-bit Unsigned Integer  I 4                      |
+ | DISK_HISTORY_TASK        Record                                            |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS       '  Repeat Area Summary               |
+ |----------------------------------------------------------------------------|
+ | Field Name               Field Data Type          Field Display Format     |
+ | ======================== ======================== ======================== |
+ | LOG WORK ORDER           8-Byte Character                                  |
+ | Interrupt Start          Timestamp                TS18                     |
+ | Interrupt Duration       31-bit Unsigned Integer  DT12                     |
+ | Interrupt Reason         16-bit Unsigned Integer  MMCIReasons              |
+ | Purge Weight             Single Precision Real    F 7.1                    |
+ | Purge Factor             Single Precision Real    F 9. 3                   |
+ | Purge Distance           Single Precision Real    F 7.1                    |
+ | Purge Strokes            16-bit Unsigned Integer  I 3                      |
+ | Purge Time               31-bit Unsigned Integer  DT12                     |
+ | Startup Time             31-bit Unsigned Integer  DT12                     |
+ | Low Cav Cycles           16-bit Unsigned Integer  I 3                      |
+ | Setpoint Changes         16-bit Unsigned Integer  I 3                      |
+ | Restarts                 16-bit Unsigned Integer  I 3                      |
+ | No Trim Cycles           16-bit Unsigned Integer  I 4                      |
+ | No Bag Cycles            16-bit Unsigned Integer  I 4                      |
+ | Reserve 1                16-bit Unsigned Integer  I 3                      |
+ | Reserve 2                16-bit Unsigned Integer  I 3                      |
+ | Reserve 3                Single Precision Real    F 9. 3                   |
+ | Reserve 4                Single Precision Real    F 9. 3                   |
+ | BADGE NUMBER             16-bit Unsigned Integer  I 5                      |
+ | COMMENT                  60-Byte Character                                 |
+ +----------------------------------------------------------------------------+
+ +----------------------------------------------------------------------------+
+ |                          Update Generation Chains                          |
+ |----------------------------------------------------------------------------|
+ |                          STOP TIME                                         |
+ |                          LOG_SEQUENCE_NUMBER                               |
+ +----------------------------------------------------------------------------+
+
+
+ +----------------------------------------------------------------------------+
+ |                         Definition Record Details                          |
+ +----------------------------------------------------------------------------+
+ Definition Record Name: MMStartupHistDef
+ Record ID:              3165
+ Number of Fields:       30
+ Fixed Area Size:        44
+ Definition Type:        Normal
+ External Task Record:   TSK_STAR
+ Detail Display Record:  MMCIDet     
+ Activation Code:        1
+
+
+ +----------------------------------------------------------------------------+
+ |                          Fixed Area Field Details                          |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             # LOG RECORDS       
+ Field Number:           7835 (hex)
+ Data Type:              History Repeat Area
+ Occurence Size:         64 Words
+ User-Program Data Type: DTYPSHRT or DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Sequence Field: LOG_SEQUENCE_NUMBER 
+ Archiving ON/OFF:       LOGS_ON_DISK        
+ Summary Line Record:    MMCIHistLine        
+
+ Field Name:             NAME        
+ Field Number:           1002 (hex)
+ Data Type:              18-Byte Character String
+ User-Program Data Type: character[18]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             MACHINE             
+ Field Number:           0059 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             WONum       
+ Field Number:           0001 (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             STOP TIME           
+ Field Number:           010F (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ Field to Update:        LOG_SEQUENCE_NUMBER 
+
+ Field Name:             START TIME          
+ Field Number:           010E (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    Activate on any COS.
+
+ Field Name:             LOG_SEQUENCE_NUMBER 
+ Field Number:           7838 (hex)
+ Data Type:              31-bit Unsigned Integer (History Sequence #)
+ User-Program Data Type: DTYPLONG
+ Display Format:         I11   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Never Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             LOGS_ON_DISK        
+ Field Number:           7837 (hex)
+ Data Type:              16-bit Unsigned Integer (Disk Count)
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 4   
+ Field Write Level:    General
+ Field Changeability:    Usable
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Task Field:     DISK_HISTORY_TASK   
+
+ Field Name:             DISK_HISTORY_TASK   
+ Field Number:           00BA (hex)
+ Data Type:              Record (Indirect Disk History Task)
+ User-Program Data Type: DTYPREID
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ Search Key Record:      DiskHistoryDef  
+
+
+ +----------------------------------------------------------------------------+
+ |              '# LOG RECORDS           '  Repeat Area Details               |
+ +----------------------------------------------------------------------------+
+
+ Field Name:             LOG WORK ORDER      
+ Field Number:           004A (hex)
+ Data Type:              8-Byte Character String
+ User-Program Data Type: character[8]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   WONum       
+
+ Field Name:             Interrupt Start     
+ Field Number:           06EA (hex)
+ Data Type:              Normal Timestamp
+ User-Program Data Type: DTYPTIME
+ Display Format:         TS18  
+ Field Write Level:    General
+ Field Changeability:    Never Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+ History Source Field:   STOP TIME           
+
+ Field Name:             Interrupt Duration  
+ Field Number:           02EB (hex)
+ Data Type:              31-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         DT12  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Interrupt Reason    
+ Field Number:           02EC (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         MMCIReasons     
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Purge Weight        
+ Field Number:           02F0 (hex)
+ Data Type:              Single Precision Real
+ User-Program Data Type: DTYPREAL or DTYPDUBL
+ Display Format:         F 7.1 
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Purge Factor        
+ Field Number:           02EF (hex)
+ Data Type:              Single Precision Real
+ User-Program Data Type: DTYPREAL or DTYPDUBL
+ Display Format:         F 9. 3
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Purge Distance      
+ Field Number:           02EE (hex)
+ Data Type:              Single Precision Real
+ User-Program Data Type: DTYPREAL or DTYPDUBL
+ Display Format:         F 7.1 
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Purge Strokes       
+ Field Number:           02ED (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Purge Time          
+ Field Number:           02F1 (hex)
+ Data Type:              31-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         DT12  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Startup Time        
+ Field Number:           02F2 (hex)
+ Data Type:              31-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         DT12  
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Low Cav Cycles      
+ Field Number:           02F3 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Setpoint Changes    
+ Field Number:           02F4 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Restarts            
+ Field Number:           02F5 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             No Trim Cycles      
+ Field Number:           02F6 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 4   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             No Bag Cycles       
+ Field Number:           02F7 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 4   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Reserve 1           
+ Field Number:           02F8 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Reserve 2           
+ Field Number:           02F9 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 3   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Reserve 3           
+ Field Number:           02FA (hex)
+ Data Type:              Single Precision Real
+ User-Program Data Type: DTYPREAL or DTYPDUBL
+ Display Format:         F 9. 3
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             Reserve 4           
+ Field Number:           02FB (hex)
+ Data Type:              Single Precision Real
+ User-Program Data Type: DTYPREAL or DTYPDUBL
+ Display Format:         F 9. 3
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             BADGE NUMBER        
+ Field Number:           0034 (hex)
+ Data Type:              16-bit Unsigned Integer
+ User-Program Data Type: DTYPLONG
+ Display Format:         I 5   
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
+
+ Field Name:             COMMENT     
+ Field Number:           1411 (hex)
+ Data Type:              60-Byte Character String
+ User-Program Data Type: character[60]
+ Field Write Level:    General
+ Field Changeability:    Always Allowed
+ Operator Changes:       Always Allowed
+ Activation Type:        Normal
+ Activation Criteria:    No Activation.
